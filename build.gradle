@@ -95,7 +95,18 @@ allprojects {
 		if (version.endsWith('SNAPSHOT')) {
 			maven { url 'https://repo.spring.io/snapshot' }
 		}
-//		maven { url 'https://repository.apache.org/content/groups/staging/' }
+		if (System.getenv("RELEASE_TRAIN_MAVEN_REPOSITORY_URL") != null) {
+			repositories {
+				maven {
+					name = "Release Train"
+					url = System.getenv("RELEASE_TRAIN_MAVEN_REPOSITORY_URL")
+					credentials {
+						username = System.getenv("RELEASE_TRAIN_MAVEN_REPOSITORY_USERNAME")
+						password = System.getenv("RELEASE_TRAIN_MAVEN_REPOSITORY_PASSWORD")
+					}
+				}
+			}
+		}
 	}
 
 	dependencyManagement {
@@ -211,6 +222,14 @@ configure(javaProjects) { subproject ->
 				from components.java
 			}
 		}
+		if (project.hasProperty("deploymentRepository")) {
+			repositories {
+				maven {
+					name = 'Deployment'
+					url = project.property("deploymentRepository")
+				}
+			}
+		}
 	}
 
 	jar {
@@ -308,6 +327,14 @@ project('spring-kafka-bom') {
 		publications {
 			mavenJava(MavenPublication) {
 				from components.javaPlatform
+			}
+		}
+		if (project.hasProperty("deploymentRepository")) {
+			repositories {
+				maven {
+					name = 'Deployment'
+					url = project.property("deploymentRepository")
+				}
 			}
 		}
 	}
@@ -473,6 +500,14 @@ publishing {
 		mavenJava(MavenPublication) {
 			artifact docsZip
 			artifact distZip
+		}
+	}
+	if (project.hasProperty("deploymentRepository")) {
+		repositories {
+			maven {
+				name = 'Deployment'
+				url = project.property("deploymentRepository")
+			}
 		}
 	}
 }
