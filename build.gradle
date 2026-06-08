@@ -281,6 +281,7 @@ project ('spring-kafka') {
 
 		testImplementation project (':spring-kafka-test')
 		testImplementation 'io.projectreactor:reactor-test'
+		testImplementation 'org.junit.jupiter:junit-jupiter'
 		testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
 		testImplementation "org.hibernate.validator:hibernate-validator:$hibernateValidationVersion"
 		testImplementation ('io.micrometer:micrometer-tracing-integration-test') {
